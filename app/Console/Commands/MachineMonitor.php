@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Console\Handler\SetupMechine;
 use App\Console\Handler\Readings;
-use App\Console\Handler\Simulate;
+use App\Console\Handler\ReportMechines;
 
 class MachineMonitor extends Command
 {
@@ -17,6 +17,7 @@ class MachineMonitor extends Command
     protected $signature = 'machine:monitor
         {--setup : Buat tabel database dan tambah 3 mesin contoh}
         {--add-reading : Tambah pembacaan baru untuk mesin tertentu}
+        {--add-reading [machine_id] : ID mesin untuk pembacaan}
         {--simulate : Generate pembacaan acak (default: 10)}
         {--simulate [count] : Jumlah pembacaan acak}
         {arg_value? : Argumen value}
@@ -48,9 +49,15 @@ class MachineMonitor extends Command
         }
 
         if ($this->option('simulate')) {
-            $count = $this->argument('arg_value');
+            $count = $this->argument('arg_value') ?? 10;
             $readings = new Readings();
             $readings->runSimulate($this, $count);
+            return;
+        }
+
+        if ($this->option('status')) {
+            $report = new ReportMechines();
+            $report->runReport($this);
             return;
         }
 
