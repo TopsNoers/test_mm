@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Machines;
 use App\Console\Handler\SetupMechine;
+use App\Console\Handler\Readings;
 
 class MachineMonitor extends Command
 {
@@ -15,8 +15,10 @@ class MachineMonitor extends Command
      */
     protected $signature = 'machine:monitor
         {--setup : Buat tabel database dan tambah 3 mesin contoh}
-        {--add-reading= : Tambah pembacaan baru untuk mesin tertentu}
-        {--simulate= : Generate pembacaan acak (default: 10)}
+        {--add-reading : Tambah pembacaan baru untuk mesin tertentu}
+        {machine_id? : ID mesin untuk pembacaan}
+        {--simulate : Generate pembacaan acak (default: 10)}
+        {simulate_count? : Jumlah pembacaan acak}
         {--status : Tampilkan semua mesin dengan data terbaru}';
 
     /**
@@ -32,18 +34,27 @@ class MachineMonitor extends Command
     public function handle()
     {
         if ($this->option('setup')) {
-            $this->runSetup();
+            $setup = new SetupMechine();
+            $setup->runSetup($this);
+            return;
+        }
+
+        if ($this->option('add-reading')) {
+            $machineId = $this->argument('machine_id');
+            $readings = new Readings();
+            $readings->runReadings($this, $machineId);
+            return;
+        }
+
+        if ($this->option('simulate')) {
+            $count = $this->argument('simulate_count');
+            $readings = new Readings();
+            $readings->runSimulate($this, $count);
             return;
         }
 
         $this->info('No valid options provided');
         $this->runHelp();
-    }
-
-    private function runSetup()
-    {
-        $setup = new SetupMechine();
-        $setup->runSetup($this);
     }
 
     private function runHelp()
