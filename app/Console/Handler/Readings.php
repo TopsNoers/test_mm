@@ -46,4 +46,32 @@ class Readings
 
         $command->info('Reading added successfully');
     }
+
+    public function runSimulate($command, $count)
+    {
+        // check if count is a number
+        if (!is_numeric($count)) {
+            $command->error('Count must be a number');
+            return;
+        }
+
+        $command->info('Running simulate for random machine ' . $count . ' times');
+
+        $machines = Machines::all();
+        for ($i = 0; $i < $count; $i++) {
+            $machine = $machines[rand(0, count($machines) - 1)];
+            $temperature = rand(20, 100);
+            $speedConveyor = rand(0.5, 5.0);
+
+            // add reading to database
+            $reading = new ReadingsModel();
+            $reading->machine_id = $machine->id;
+            $reading->temperature = $temperature;
+            $reading->conveyor_speed = $speedConveyor;
+            $reading->recorded_at = now();
+            $reading->save();
+        }
+
+        $command->info('Simulate for random machine ' . $count . ' times completed');
+    }
 }
