@@ -17,9 +17,7 @@ class MachineMonitor extends Command
     protected $signature = 'machine:monitor
         {--setup : Buat tabel database dan tambah 3 mesin contoh}
         {--add-reading : Tambah pembacaan baru untuk mesin tertentu}
-        {--add-reading [machine_id] : ID mesin untuk pembacaan}
         {--simulate : Generate pembacaan acak (default: 10)}
-        {--simulate [count] : Jumlah pembacaan acak}
         {arg_value? : Argumen value}
         {--status : Tampilkan semua mesin dengan data terbaru}';
 
@@ -70,8 +68,8 @@ class MachineMonitor extends Command
         $this->info('Usage: php artisan machine:monitor [options]');
         $this->info('Options:');
         $this->info('  --setup : Buat tabel database dan tambah 3 mesin contoh');
-        $this->info('  --add-reading= : Tambah pembacaan baru untuk mesin tertentu');
-        $this->info('  --simulate= : Generate pembacaan acak (default: 10)');
+        $this->info('  --add-reading [machine_id] : Tambah pembacaan baru untuk mesin tertentu');
+        $this->info('  --simulate [count] : Generate pembacaan acak (default: 10)');
         $this->info('  --status : Tampilkan semua mesin dengan data terbaru');
     }
 }
